@@ -1,34 +1,62 @@
 const input = document.getElementById("image");
+const preview = document.getElementById("preview");
 
 input.onchange = () => {
+    if (!input.files || !input.files[0]) {
+        alert("Please select an image first.");
+        return;
+    }
 
-preview.src = URL.createObjectURL(input.files[0]);
-
+    preview.src = URL.createObjectURL(input.files[0]);
 };
 
-async function predict(){
+async function predict() {
 
-let file = input.files[0];
+    let file = input.files[0];
 
-let form = new FormData();
+    if (!file) {
+        alert("Please select an image first.");
+        return;
+    }
 
-form.append("image",file);
+    const btn = document.getElementById("predictBtn");
+    const loading = document.getElementById("loading");
 
-let response = await fetch("/predict",{
+    // Show loading state
+    btn.disabled = true;
+    btn.innerHTML = "Analyzing...";
+    loading.style.display = "flex";
 
-method:"POST",
+    try {
 
-body:form
+        let form = new FormData();
+        form.append("image", file);
 
-});
+        let response = await fetch("/predict", {
+            method: "POST",
+            body: form
+        });
 
-let result = await response.json();
+        let result = await response.json();
 
-document.getElementById("result").innerHTML=
+        document.getElementById("result").innerHTML = `
+            <b>${result.prediction}</b><br>
+            Confidence: ${result.confidence}%
+        `;
 
-`Prediction: ${result.prediction}<br>
-Confidence: ${result.confidence}%`;
+    } catch (error) {
 
+        alert("Prediction failed. Please try again.");
+        console.error(error);
+
+    } finally {
+
+        // Restore button
+        btn.disabled = false;
+        btn.innerHTML = "Predict Uploaded Image";
+        loading.style.display = "none";
+
+    }
 }
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
@@ -39,8 +67,13 @@ let stream = null;
 document.getElementById("openCamera").onclick = async () => {
 
     stream = await navigator.mediaDevices.getUserMedia({
-        video: true
-    });
+    video: {
+        facingMode: {
+            ideal: "environment"
+        }
+    },
+    audio: false
+});
 
     video.srcObject = stream;
 
@@ -68,9 +101,21 @@ document.getElementById("capture").onclick = () => {
         });
 
         const result = await response.json();
-
-        document.getElementById("result").innerHTML =
-            `Prediction: ${result.prediction}<br>Confidence: ${result.confidence}%`;
+        if (result.prediction.startsWith("Uncertain")) {
+    document.getElementById("result").innerHTML = `
+        <span style="color:#e67e22;font-weight:bold;">
+            ${result.prediction}
+        </span><br>
+        Confidence: ${result.confidence}%
+        `;
+        } else {
+            document.getElementById("result").innerHTML = `
+                <span style="color:#2e7d32;font-weight:bold;">
+                    ${result.prediction}
+                </span><br>
+                Confidence: ${result.confidence}%
+        `;
+        }
 
         // Stop camera after capture
         stream.getTracks().forEach(track => track.stop());

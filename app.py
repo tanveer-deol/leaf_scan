@@ -6,6 +6,7 @@ import cv2
 app = Flask(__name__)
 
 IMG_SIZE = 256
+CONFIDENCE_THRESHOLD = 0.70
 
 model = tf.keras.models.load_model("leaf_disease_model_final.h5")
 
@@ -70,7 +71,8 @@ def predict(image):
 
     idx = np.argmax(prediction)
     confidence = float(np.max(prediction))
-
+    if confidence < CONFIDENCE_THRESHOLD:
+        return "Uncertain — please retake the photo with a clear leaf image.", confidence
     return class_names[idx], confidence
 
 

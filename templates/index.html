@@ -43,9 +43,14 @@
 
         <img id="preview" class="preview">
 
-        <button class="btn green" onclick="predict()">
+        <button id="predictBtn" class="btn green" onclick="predict()">
             Predict Uploaded Image
         </button>
+
+        <div id="loading" class="loading" style="display:none;">
+            <div class="spinner"></div>
+            <span>Analyzing leaf image...</span>
+        </div>
 
     </div>
 
