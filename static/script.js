@@ -38,11 +38,19 @@ async function predict() {
         });
 
         let result = await response.json();
-
         document.getElementById("result").innerHTML = `
-            <b>${result.prediction}</b><br>
-            Confidence: ${result.confidence}%
-        `;
+    <h3>${result.prediction}</h3>
+    <p><strong>Confidence:</strong> ${result.confidence}%</p>
+
+    <hr>
+
+    <p><strong>Cause:</strong><br>${result.cause}</p>
+
+    <p><strong>Prevention:</strong><br>${result.prevention}</p>
+
+    <p><strong>Treatment:</strong><br>${result.treatment}</p>
+`;
+
 
     } catch (error) {
 

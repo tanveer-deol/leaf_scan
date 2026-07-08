@@ -469,3 +469,16 @@ button:disabled{
     opacity:.6;
     cursor:not-allowed;
 }
+#result{
+    text-align:center;
+    line-height:1.7;
+}
+
+#result h3{
+    color:#2e7d32;
+    margin-bottom:10px;
+}
+
+#result p{
+    margin:12px 0;
+}
