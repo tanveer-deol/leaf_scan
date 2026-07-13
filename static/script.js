@@ -118,11 +118,17 @@ document.getElementById("capture").onclick = () => {
         `;
         } else {
             document.getElementById("result").innerHTML = `
-                <span style="color:#2e7d32;font-weight:bold;">
-                    ${result.prediction}
-                </span><br>
-                Confidence: ${result.confidence}%
-        `;
+    <h3>${result.prediction}</h3>
+    <p><strong>Confidence:</strong> ${result.confidence}%</p>
+
+    <hr>
+
+    <p><strong>Cause:</strong><br>${result.cause}</p>
+
+    <p><strong>Prevention:</strong><br>${result.prevention}</p>
+
+    <p><strong>Treatment:</strong><br>${result.treatment}</p>
+`;
         }
 
         // Stop camera after capture
