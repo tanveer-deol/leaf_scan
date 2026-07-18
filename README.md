@@ -1,0 +1,1 @@
+Leaf Scan is an AI-powered web application that detects plant leaf diseases from images using deep learning. Users can upload a leaf image and receive an instant prediction along with disease information and recommended treatments.
